@@ -2,12 +2,12 @@ import sys
 
 sys.path.append('./')
 
-from yolo.net.yolo_tiny_net import YoloTinyNet 
-import tensorflow as tf 
-import cv2
+from PIL import Image, ImageDraw
+from yolo.net.yolo_tiny_net import YoloTinyNet
+import tensorflow as tf
 import numpy as np
 
-classes_name =  ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train","tvmonitor"]
+classes_name =  ["aeroplane", "bicycle", "bird", "boat", "bottle", "bus", "car", "cat", "chair", "cow", "diningtable", "dog", "horse", "motorbike", "person", "pottedplant", "sheep", "sofa", "train", "tvmonitor"]
 
 
 def process_predicts(predicts):
@@ -62,10 +62,9 @@ predicts = net.inference(image)
 
 sess = tf.Session()
 
-np_img = cv2.imread('cat.jpg')
-resized_img = cv2.resize(np_img, (448, 448))
-np_img = cv2.cvtColor(resized_img, cv2.COLOR_BGR2RGB)
-
+np_img = Image.open('cat.jpg')
+resized_img = np_img.resize((448, 448))
+np_img = np.array(resized_img)
 
 np_img = np_img.astype(np.float32)
 
@@ -80,7 +79,8 @@ np_predict = sess.run(predicts, feed_dict={image: np_img})
 
 xmin, ymin, xmax, ymax, class_num = process_predicts(np_predict)
 class_name = classes_name[class_num]
-cv2.rectangle(resized_img, (int(xmin), int(ymin)), (int(xmax), int(ymax)), (0, 0, 255))
-cv2.putText(resized_img, class_name, (int(xmin), int(ymin)), 2, 1.5, (0, 0, 255))
-cv2.imwrite('cat_out.jpg', resized_img)
+d = ImageDraw.Draw(resized_img)
+d.rectangle([int(xmin), int(ymin), int(xmax), int(ymax)], fill=None, outline="blue")
+d.text((int(xmin), int(ymin)), class_name, fill="blue")
+resized_img.save("cat_out.png", "PNG")
 sess.close()
