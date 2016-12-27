@@ -110,7 +110,7 @@ class TextDataSet(DataSet):
     return [np.array(image), labels, object_num]
 
   def record_customer(self):
-    """record queue's customer 
+    """record queue's customer
     """
     while True:
       item = self.record_queue.get()
