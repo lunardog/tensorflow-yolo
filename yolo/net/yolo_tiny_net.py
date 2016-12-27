@@ -71,13 +71,13 @@ class YoloTinyNet(Net):
     temp_conv = self.max_pool(temp_conv, [2, 2], 2)
 
     temp_conv = self.conv2d('conv' + str(conv_num), temp_conv, [3, 3, 512, 1024], stride=1)
-    conv_num += 1     
+    conv_num += 1
 
     temp_conv = self.conv2d('conv' + str(conv_num), temp_conv, [3, 3, 1024, 1024], stride=1)
-    conv_num += 1 
+    conv_num += 1
 
     temp_conv = self.conv2d('conv' + str(conv_num), temp_conv, [3, 3, 1024, 1024], stride=1)
-    conv_num += 1 
+    conv_num += 1
 
     temp_conv = tf.transpose(temp_conv, (0, 3, 1, 2))
 
@@ -121,7 +121,7 @@ class YoloTinyNet(Net):
     rd = tf.minimum(boxes1[:, :, :, 2:], boxes2[2:])
 
     #intersection
-    intersection = rd - lu 
+    intersection = rd - lu
 
     inter_square = intersection[:, :, :, 0] * intersection[:, :, :, 1]
 
@@ -197,7 +197,7 @@ class YoloTinyNet(Net):
     I = tf.cast((I >= max_I), tf.float32) * tf.reshape(response, (self.cell_size, self.cell_size, 1))
 
     #calculate no_I tensor [CELL_SIZE, CELL_SIZE, BOXES_PER_CELL]
-    no_I = tf.ones_like(I, dtype=tf.float32) - I 
+    no_I = tf.ones_like(I, dtype=tf.float32) - I
 
 
     p_C = predict[:, :, self.num_classes:self.num_classes + self.boxes_per_cell]
