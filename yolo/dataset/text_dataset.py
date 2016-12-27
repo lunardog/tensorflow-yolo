@@ -1,20 +1,16 @@
-
-
-
-
 import os
 import math
 import random
-import cv2
+from PIL import Image
 import numpy as np
-from queue import Queue 
+from queue import Queue
 from threading import Thread
 
-from yolo.dataset.dataset import DataSet 
+from yolo.dataset.dataset import DataSet
 
 class TextDataSet(DataSet):
   """TextDataSet
-  process text input file dataset 
+  process text input file dataset
   text file format:
     image_path xmin1 ymin1 xmax1 ymax1 class1 xmin2 ymin2 xmax2 ymax2 class2
   """
@@ -37,7 +33,7 @@ class TextDataSet(DataSet):
     self.record_queue = Queue(maxsize=10000)
     self.image_label_queue = Queue(maxsize=512)
 
-    self.record_list = []  
+    self.record_list = []
 
     # filling the record_list
     input_file = open(self.data_path, 'r')
@@ -80,15 +76,15 @@ class TextDataSet(DataSet):
       labels: 2-D list [self.max_objects, 5] (xcenter, ycenter, w, h, class_num)
       object_num:  total object number  int 
     """
-    image = cv2.imread(record[0])
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image = Image.open(record[0])
+
     h = image.shape[0]
     w = image.shape[1]
 
-    width_rate = self.width * 1.0 / w 
-    height_rate = self.height * 1.0 / h 
+    width_rate = self.width * 1.0 / w
+    height_rate = self.height * 1.0 / h
 
-    image = cv2.resize(image, (self.height, self.width))
+    image = image.resize((self.height, self.width))
 
     labels = [[0, 0, 0, 0, 0]] * self.max_objects
     i = 1
