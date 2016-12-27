@@ -78,8 +78,8 @@ class TextDataSet(DataSet):
     """
     image = Image.open(record[0])
 
-    h = image.shape[0]
-    w = image.shape[1]
+    h = image.size[0]
+    w = image.size[1]
 
     width_rate = self.width * 1.0 / w
     height_rate = self.height * 1.0 / h
@@ -107,7 +107,7 @@ class TextDataSet(DataSet):
       i += 5
       if object_num >= self.max_objects:
         break
-    return [image, labels, object_num]
+    return [np.array(image), labels, object_num]
 
   def record_customer(self):
     """record queue's customer 
